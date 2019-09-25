@@ -1,0 +1,43 @@
+CREATE DATABASE `blubstagram` /*!40100 DEFAULT CHARACTER SET latin1 */;
+
+DROP TABLE IF EXISTS `blubstagram`.`tbl_user`;
+CREATE TABLE  `blubstagram`.`tbl_user` (
+  `userName` varchar(30) NOT NULL,
+  `pw` varchar(30) NOT NULL,
+  PRIMARY KEY (`userName`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+DROP TABLE IF EXISTS `blubstagram`.`pix`;
+CREATE TABLE  `blubstagram`.`pix` (
+  `PID` int(11) NOT NULL AUTO_INCREMENT,
+  `userName` varchar(30) DEFAULT NULL,
+  `category` varchar(30) NOT NULL,
+  `added` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `pname` varchar(30) NOT NULL,
+  PRIMARY KEY (`PID`),
+  KEY `userName` (`userName`),
+  CONSTRAINT `pix_ibfk_1` FOREIGN KEY (`userName`) REFERENCES `tbl_user` (`userName`)
+) ENGINE=InnoDB AUTO_INCREMENT=18 DEFAULT CHARSET=latin1;
+
+DROP TABLE IF EXISTS `blubstagram`.`ratings`;
+CREATE TABLE  `blubstagram`.`ratings` (
+  `RID` int(11) NOT NULL,
+  `pid` int(11) DEFAULT NULL,
+  `stars` int(5) DEFAULT NULL,
+  `commentary` tinytext,
+  PRIMARY KEY (`RID`),
+  KEY `pid` (`pid`),
+  CONSTRAINT `ratings_ibfk_1` FOREIGN KEY (`pid`) REFERENCES `pix` (`PID`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+DROP TABLE IF EXISTS `blubstagram`.`userrating`;
+CREATE TABLE  `blubstagram`.`userrating` (
+  `urid` int(11) NOT NULL,
+  `RID` int(11) DEFAULT NULL,
+  `userName` varchar(30) DEFAULT NULL,
+  PRIMARY KEY (`urid`),
+  KEY `RID` (`RID`),
+  KEY `userName` (`userName`),
+  CONSTRAINT `userrating_ibfk_1` FOREIGN KEY (`RID`) REFERENCES `ratings` (`RID`),
+  CONSTRAINT `userrating_ibfk_2` FOREIGN KEY (`userName`) REFERENCES `tbl_user` (`userName`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
